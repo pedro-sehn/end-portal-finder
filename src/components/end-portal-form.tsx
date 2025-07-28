@@ -68,12 +68,12 @@ export function EndPortalForm() {
           </SelectContent>
         </Select>
         <Input
-          placeholder="Distance Travelled"
-          onChange={(e) => setDistanceTravelled(Number(e.target.value))}
-        />
-        <Input
           placeholder="First Angle"
           onChange={(e) => setH({ h1: Number(e.target.value), h2: h.h2 })}
+        />
+        <Input
+          placeholder="Distance Travelled"
+          onChange={(e) => setDistanceTravelled(Number(e.target.value))}
         />
         <Input
           placeholder="Second Angle"

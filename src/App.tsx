@@ -7,7 +7,9 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="w-screen h-screen flex flex-col items-center justify-center">
         <EndPortalForm />
-        <ModeToggle />
+        <div className=" absolute right-6 bottom-5">
+          <ModeToggle />
+        </div>
       </div>
     </ThemeProvider>
   );
