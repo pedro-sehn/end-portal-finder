@@ -1,7 +1,9 @@
+"use client";
+
 import { Canvas } from "@react-three/fiber";
-import { EndPortalForm } from "./components/end-portal-form";
-import { ThemeProvider, useTheme } from "./components/theme-provider";
-import StarsShader from "./components/stars-shader";
+import { EndPortalForm } from "./end-portal-form";
+import { ThemeProvider } from "./theme-provider";
+import StarsShader from "./stars-shader";
 
 function AppContent() {
   return (
@@ -14,19 +16,14 @@ function AppContent() {
         <StarsShader />
       </Canvas>
       <EndPortalForm />
-      {/* <div className=" absolute right-6 top-6">
-        <ModeToggle />
-      </div> */}
     </div>
   );
 }
 
-function App() {
+export default function AppShell() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <AppContent />
     </ThemeProvider>
   );
 }
-
-export default App;
