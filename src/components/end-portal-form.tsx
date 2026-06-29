@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { HelpCircle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 type Directions = "North" | "South" | "East" | "West";
 
@@ -66,6 +67,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export function EndPortalForm() {
+  const { t } = useI18n();
+
   const [result, setResult] = useState<Result>(null);
   const [showHelp, setShowHelp] = useState(false);
 
@@ -104,10 +107,8 @@ export function EndPortalForm() {
     <>
       <div className="bg-background/90 backdrop-blur flex flex-col border rounded-xl p-8 gap-6 w-[min(28rem,calc(100vw-2rem))]">
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-3xl font-semibold">End Portal Finder</h1>
-        <p className="text-sm text-muted-foreground">
-          Triangulate your Minecraft stronghold from two eye-of-ender throws.
-        </p>
+        <h1 className="text-3xl font-semibold">{t.title}</h1>
+        <p className="text-sm text-muted-foreground">{t.subtitle}</p>
       </div>
 
       <button
@@ -116,19 +117,20 @@ export function EndPortalForm() {
         className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
       >
         <HelpCircle className="size-4" />
-        {showHelp ? "Hide instructions" : "How does this work?"}
+        {showHelp ? t.hideInstructions : t.showInstructions}
       </button>
 
       {result === "parallel" && (
         <div className="rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-center text-sm text-destructive">
-          The two angles point the same way, so they never cross. Walk further
-          (or in a different direction) and read the angles again.
+          {t.parallelError}
         </div>
       )}
 
       {result && result !== "parallel" && (
         <div className="rounded-md border bg-muted/40 px-4 py-3 text-center">
-          <span className="text-sm text-muted-foreground">Stronghold near</span>
+          <span className="text-sm text-muted-foreground">
+            {t.strongholdNear}
+          </span>
           <div className="text-2xl font-semibold tabular-nums">
             X: {result.x}, Z: {result.z}
           </div>
@@ -136,7 +138,7 @@ export function EndPortalForm() {
       )}
 
       <div className="flex flex-col gap-4">
-        <Field label="Facing direction (while walking)">
+        <Field label={t.facingLabel}>
           <Select
             value={facingDirection}
             onValueChange={(direction) =>
@@ -144,19 +146,19 @@ export function EndPortalForm() {
             }
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a direction" />
+              <SelectValue placeholder={t.facingPlaceholder} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="North">North (−Z)</SelectItem>
-              <SelectItem value="South">South (+Z)</SelectItem>
-              <SelectItem value="East">East (+X)</SelectItem>
-              <SelectItem value="West">West (−X)</SelectItem>
+              <SelectItem value="North">{t.directions.north}</SelectItem>
+              <SelectItem value="South">{t.directions.south}</SelectItem>
+              <SelectItem value="East">{t.directions.east}</SelectItem>
+              <SelectItem value="West">{t.directions.west}</SelectItem>
             </SelectContent>
           </Select>
         </Field>
 
         <div className="flex gap-4">
-          <Field label="Starting X">
+          <Field label={t.startX}>
             <Input
               type="number"
               inputMode="decimal"
@@ -165,7 +167,7 @@ export function EndPortalForm() {
               onChange={(e) => setStartX(e.target.value)}
             />
           </Field>
-          <Field label="Starting Z">
+          <Field label={t.startZ}>
             <Input
               type="number"
               inputMode="decimal"
@@ -176,31 +178,31 @@ export function EndPortalForm() {
           </Field>
         </div>
 
-        <Field label="First angle (°)">
+        <Field label={t.firstAngle}>
           <Input
             type="number"
             inputMode="decimal"
-            placeholder="e.g. -42.7"
+            placeholder={t.firstAnglePlaceholder}
             value={angle1}
             onChange={(e) => setAngle1(e.target.value)}
           />
         </Field>
 
-        <Field label="Distance travelled (blocks)">
+        <Field label={t.distance}>
           <Input
             type="number"
             inputMode="decimal"
-            placeholder="e.g. 250"
+            placeholder={t.distancePlaceholder}
             value={distanceTravelled}
             onChange={(e) => setDistanceTravelled(e.target.value)}
           />
         </Field>
 
-        <Field label="Second angle (°)">
+        <Field label={t.secondAngle}>
           <Input
             type="number"
             inputMode="decimal"
-            placeholder="e.g. -61.3"
+            placeholder={t.secondAnglePlaceholder}
             value={angle2}
             onChange={(e) => setAngle2(e.target.value)}
           />
@@ -213,7 +215,7 @@ export function EndPortalForm() {
         disabled={!isValid}
         onClick={handleFind}
       >
-        Find
+        {t.find}
       </Button>
       </div>
 
@@ -226,37 +228,20 @@ export function EndPortalForm() {
           )}
         >
           <div className="flex items-center justify-between gap-2 mb-3">
-            <h2 className="text-sm font-semibold">How does this work?</h2>
+            <h2 className="text-sm font-semibold">{t.helpTitle}</h2>
             <button
               type="button"
               onClick={() => setShowHelp(false)}
-              aria-label="Close instructions"
+              aria-label={t.closeInstructions}
               className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               <X className="size-4" />
             </button>
           </div>
           <ol className="text-sm text-muted-foreground list-decimal pl-5 space-y-1.5">
-            <li>
-              Stand still and throw an eye of ender. Open the debug screen
-              (<kbd className="px-1 rounded bg-muted text-foreground">F3</kbd>)
-              and read the horizontal <strong>Facing</strong> angle as the eye
-              flies — that is your <strong>First angle</strong>.
-            </li>
-            <li>
-              (Optional) Enter your current X / Z from the debug screen so the
-              result is in world coordinates. Leave them at 0 to get coordinates
-              relative to where you stood.
-            </li>
-            <li>
-              Walk in a single cardinal direction (the one you chose below) and
-              count the blocks travelled.
-            </li>
-            <li>
-              Throw a second eye and read its angle — that is your
-              <strong> Second angle</strong>.
-            </li>
-            <li>Hit Find to triangulate the stronghold&apos;s X and Z.</li>
+            {t.steps.map((step, i) => (
+              <li key={i}>{step}</li>
+            ))}
           </ol>
         </aside>
       )}
