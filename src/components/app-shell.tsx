@@ -3,7 +3,9 @@
 import { Canvas } from "@react-three/fiber";
 import { EndPortalForm } from "./end-portal-form";
 import { ThemeProvider } from "./theme-provider";
+import { LanguageToggle } from "./language-toggle";
 import StarsShader from "./stars-shader";
+import { I18nProvider } from "@/lib/i18n";
 
 function AppContent() {
   return (
@@ -15,6 +17,9 @@ function AppContent() {
       >
         <StarsShader />
       </Canvas>
+      <div className="fixed top-4 right-4 z-30">
+        <LanguageToggle />
+      </div>
       <EndPortalForm />
     </div>
   );
@@ -23,7 +28,9 @@ function AppContent() {
 export default function AppShell() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <AppContent />
+      <I18nProvider>
+        <AppContent />
+      </I18nProvider>
     </ThemeProvider>
   );
 }
